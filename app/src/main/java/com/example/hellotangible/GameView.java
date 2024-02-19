@@ -7,6 +7,8 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable {
@@ -20,6 +22,7 @@ public class GameView extends SurfaceView implements Runnable {
     private boolean isPlaying;
     private Bird[] birds;
     private Random random;
+    private List<Bullet> bullets;
 
     private Background background1, background2;
 
@@ -39,7 +42,9 @@ public class GameView extends SurfaceView implements Runnable {
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
 
-        flight = new Flight(screenY, getResources());
+        flight = new Flight(this, screenY, getResources());
+
+        bullets = new ArrayList<>();
 
         background2.x = screenX;
 
@@ -118,6 +123,18 @@ public class GameView extends SurfaceView implements Runnable {
 
         }
 
+        List<Bullet> trash = new ArrayList<>();
+
+        for (Bullet bullet : bullets) {
+            if (bullet.x > screenX) {
+                trash.add(bullet);
+            }
+            bullet.x += 50 * screenRatioX;
+        }
+        for (Bullet bullet : trash) {
+            bullets.remove(bullet);
+        }
+
     }
     private void draw() {
 
@@ -138,6 +155,10 @@ public class GameView extends SurfaceView implements Runnable {
 
             for (Bird bird: birds) {
                 canvas.drawBitmap(bird.getBird(), bird.x, bird.y, paint);
+            }
+
+            for (Bullet bullet : bullets ) {
+                canvas.drawBitmap(bullet.bullet, bullet.x, bullet.y, paint);
             }
 
 
@@ -183,9 +204,22 @@ public class GameView extends SurfaceView implements Runnable {
                 break;
             case MotionEvent.ACTION_UP:
                 flight.isGoingUp = false;
+                if (event.getX() > screenX / 2) {
+                    flight.toShoot++;
+                }
                 break;
         }
 
         return true;
+    }
+
+    public void newBullet() {
+
+        Bullet bullet = new Bullet(getResources());
+        bullet.x = flight.x + flight.width;
+        bullet.y = flight.y + (flight.height / 2);
+        bullets.add(bullet);
+
+
     }
 }

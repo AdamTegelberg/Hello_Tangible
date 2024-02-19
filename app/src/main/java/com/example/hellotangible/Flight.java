@@ -10,12 +10,16 @@ import android.graphics.Rect;
 
 public class Flight {
 
+    private GameView gameView;
     public boolean isGoingUp = false;
-    int x, y, width, height, wingCounter = 0;
-    Bitmap chicken1, chicken2, dead;
+    int x, y, width, height, wingCounter = 0, shootCounter = 1;
+    Bitmap chicken1, chicken2, dead, shoot5;
+    public int toShoot = 0;
 
 
-    Flight(int screenY, Resources res) {
+    Flight(GameView gameView, int screenY, Resources res) {
+
+        this.gameView = gameView;
         chicken1 = BitmapFactory.decodeResource(res, R.drawable.chickenchicken1);
         chicken2 = BitmapFactory.decodeResource(res, R.drawable.chickenchicken2);
 
@@ -31,6 +35,9 @@ public class Flight {
         chicken1 = Bitmap.createScaledBitmap(chicken1, width, height, false);
         chicken2 = Bitmap.createScaledBitmap(chicken2, width, height, false);
 
+        shoot5 = BitmapFactory.decodeResource(res, R.drawable.chickenchicken2);
+        shoot5 = Bitmap.createScaledBitmap(shoot5, width, height, false);
+
         y = screenY / 2;
         x = (int) (64 * screenRatioX);
 
@@ -40,6 +47,14 @@ public class Flight {
     }
 
     Bitmap getFlight() {
+
+        if (toShoot != 0) {
+
+            toShoot --;
+            gameView.newBullet();
+            return shoot5;
+
+        }
 
         if (wingCounter == 0) {
             wingCounter ++;

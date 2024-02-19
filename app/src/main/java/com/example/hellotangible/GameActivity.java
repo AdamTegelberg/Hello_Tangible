@@ -20,7 +20,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class GameActivity extends AppCompatActivity {
 
     private MqttAndroidClient client;
-    final String MQTT_HOST = "tcp://broker.hivemq.com:1883";
+    final String MQTT_HOST = "tcp://test.mosquitto.org:1883";
     final String sub_topic = "leostern/2";
     final String pub_topic = "mamn01/example/android";
     final String pub_message = "Hello World!";
